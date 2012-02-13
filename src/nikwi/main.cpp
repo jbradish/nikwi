@@ -31,37 +31,9 @@ bool	running = true;
 bool	debugMode = false;
 int	debugCounter = 0;
 
-extern "C" {
-unsigned long	rdtsc_h;
-unsigned long	rdtsc_l;
-};
-unsigned long long rdtsc()
-{
-	asm("rdtsc");
-	#ifdef WIN32
-	asm("movl %edx, _rdtsc_h");
-	asm("movl %eax, _rdtsc_l");
-	#else
-	asm("movl %edx, rdtsc_h");
-	asm("movl %eax, rdtsc_l");
-	#endif
-	return (((unsigned long long)rdtsc_h << 32)|rdtsc_l);
-}
-
 static void timedTasks()
 {
-	if (debugMode)
-	{
-		unsigned long long	counter = rdtsc();
-		activeScreen->timer();
-		char	buff[32];
-		sprintf(buff, "Debug mode - %llu cycles", rdtsc()-counter);
-		SDL_WM_SetCaption(buff, buff);
-	}
-	else
-	{
-		activeScreen->timer();
-	}
+	activeScreen->timer();
 }
 
 static uint	extra = 0;
@@ -222,12 +194,16 @@ static void mainLoop()
 	}
 }
 
+#ifdef __APPLE__
+extern "C" int SDL_main(int argn, char** argv)
+#else
 int main(int argn, char *argv[])
+#endif
 {
 	bool	editMode = false;
 	uint	startLevel = 0;
 	
-	for (uint i=0;i<argn;i++)
+	for (int i=0;i<argn;i++)
 	{
 		if (!strcmp(argv[i], "--enable-editor"))
 			editMode = true;

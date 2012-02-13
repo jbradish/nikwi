@@ -6,9 +6,16 @@ OUTPUT = nikwi
 SOURCES = $(wildcard src/nikwi/*.cpp) src/slashfx/main.c $(wildcard src/slashtdp/*.cpp) $(wildcard src/us/*.cpp) src/badcfg/main.c
 OBJECTS = $(patsubst %.c,%.o,$(patsubst %.cpp,%.o,$(SOURCES)))
 HEADERS = $(wildcard src/nikwi/*.h) src/slashfx/slashfx.h $(wildcard src/slashtdp/slashtdp/*.h) $(wildcard src/us/uscript/*.h) src/badcfg/badcfg.h
+ifeq ($(shell uname -s),Darwin)
+LIBS = -m32 -framework SDL -framework Cocoa
+else
 LIBS = -lSDL
+endif
 CFLAGS := -g3 -Wall -Wno-write-strings -Isrc/badcfg -Isrc/nikwi -Isrc/slashfx -Isrc/slashtdp -Isrc/us $(CFLAGS) $(CPPFLAGS)
 CXXFLAGS = $(CFLAGS)
+ifeq ($(shell uname -s),Darwin)
+CFLAGS := -m32 $(CFLAGS) -I/Library/Frameworks/SDL.framework/Headers
+endif
 
 .PHONY: all
 all: game data
@@ -23,10 +30,20 @@ data: tools justdata.up
 tools: src/tools/bmp2ut/bmp2ut src/tools/upack/upack
 
 src/tools/bmp2ut/bmp2ut: src/tools/bmp2ut/bmp2ut.c
+ifeq ($(shell uname -s),Darwin)
+	$(CC) -o $@ $< -framework SDL -framework Cocoa -I/Library/Frameworks/SDL.framework/Headers
+else
 	$(CC) -o $@ $< -lSDL
+endif
 
 src/tools/upack/upack: src/tools/upack/upack.c
 	$(CC) -o $@ $<
+
+ifeq ($(shell uname -s),Darwin)
+OBJECTS := $(OBJECTS) src/nikwi/osx/SDLMain.o
+src/nikwi/osx/SDLMain.o: src/nikwi/osx/SDLMain.m
+	$(CC) $(CFLAGS) -c -o $@ $< -m32 -framework SDL -framework Cocoa
+endif
 
 justdata.up: tools
 	./makedata.sh

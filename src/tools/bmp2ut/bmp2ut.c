@@ -32,7 +32,7 @@
 #include <string.h>
 #include <SDL/SDL.h>
 
-#ifdef WIN32
+#ifdef main
 #undef main
 #endif
 
