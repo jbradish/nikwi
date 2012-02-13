@@ -4,10 +4,8 @@ make clean
 CFLAGS=-O3 make all
 
 APP="NikwiDeluxe.app"
-TGT=nikwideluxe-macosx
 
-rm -fr $TGT "Nikwi Deluxe.app"
-mkdir $TGT
+rm -fr $TGT $APP "Nikwi Deluxe.app" dmgfolder
 
 rm -fr $APP
 mkdir $APP

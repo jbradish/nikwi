@@ -9,7 +9,7 @@ mkdir $TGT
 
 cp -R manual license.txt nikwi.ico nikwi justdata.up $TGT
 strip --strip-all $TGT/nikwi
-tar cJvf $TGT.xz $TGT
+tar cJvf $TGT.tar.xz $TGT
 
 echo Done
 
