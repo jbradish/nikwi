@@ -1,0 +1,10 @@
+*.o
+nikwi
+*.exe
+src/tools/bmp2ut/bmp2ut
+src/tools/upack/upack
+data/objects/
+data/tiles/
+justdata.up
+*.res
+
