@@ -2,7 +2,7 @@
 make clean
 CFLAGS=-O3 make all
 
-TGT=nikwideluxe-linux-`uname -p`
+TGT=nikwideluxe-linux-`uname -m`
 
 rm -fr $TGT
 mkdir $TGT
