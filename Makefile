@@ -11,7 +11,11 @@ LIBS = -m32 -framework SDL -framework Cocoa
 else
 LIBS = -lSDL
 endif
-CFLAGS := -g3 -Wall -Wno-write-strings -Isrc/badcfg -Isrc/nikwi -Isrc/slashfx -Isrc/slashtdp -Isrc/us $(CFLAGS) $(CPPFLAGS)
+ifeq ($(shell uname -s | sed s/[0-9]*_.*//),MINGW)
+LIBS := $(LIBS) -mwindows -static-libgcc `$(CXX) -print-file-name=libstdc++.a`
+OBJECTS := $(OBJECTS) nikwi.res
+endif
+CFLAGS := -g3 -Wall -Wno-write-strings -Isrc/badcfg -Isrc/nikwi -Isrc/slashfx -Isrc/slashtdp -Isrc/us $(CFLAGS) $(XCFLAGS) $(CPPFLAGS)
 CXXFLAGS = $(CFLAGS)
 ifeq ($(shell uname -s),Darwin)
 CFLAGS := -m32 $(CFLAGS) -I/Library/Frameworks/SDL.framework/Headers
